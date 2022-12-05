@@ -19,8 +19,7 @@ exports.correctGrammer = async (req, res) => {
       return await sendErrorResponse(res, {
         error: error.details[0].message,
       });
-    let { text } = req.body,
-      result = "";
+    let { text } = req.body;
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: `Correct this to standard English:${text}.`,
@@ -31,9 +30,8 @@ exports.correctGrammer = async (req, res) => {
       presence_penalty: 0.0,
     });
 
-    result = completion.data.choices[0].text.replaceAll("\n", "");
     await sendSuccessResponse(res, {
-      result,
+      result: completion.data.choices[0].text,
     });
   } catch (error) {
     logger.error(`Error : ${error},Request : ${req.originalUrl}`);
