@@ -20,15 +20,17 @@ exports.correctGrammer = async (req, res) => {
         error: error.details[0].message,
       });
     let { text } = req.body;
+    const prompt = `Please correct this to standard English: ${text}`;
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: `Correct this to standard English:${text}.`,
-      temperature: 0,
-      max_tokens: 60,
-      top_p: 1.0,
-      frequency_penalty: 0.0,
-      presence_penalty: 0.0,
+      prompt,
+      temperature: 0.5,
+      max_tokens: 1000,
+      //   top_p: 1.0,
+      //   frequency_penalty: 0.0,
+      //   presence_penalty: 0.0,
     });
+    // return completion.data.choices[0].text;
 
     await sendSuccessResponse(res, {
       result: completion.data.choices[0].text,
